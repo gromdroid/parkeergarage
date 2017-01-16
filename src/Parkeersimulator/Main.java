@@ -10,11 +10,3 @@ public class Main {
 	}
 
 }
-
-/*
- * 
- * Test
- * 
- */
-
-
