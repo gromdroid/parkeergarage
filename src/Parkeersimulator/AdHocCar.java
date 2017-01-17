@@ -18,7 +18,7 @@ public class AdHocCar extends Car {
     }
 }
 
-/*
+/*hayo was not here
  * 
  * Dit is een test
  * 
