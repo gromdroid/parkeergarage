@@ -14,6 +14,7 @@ public class SimulatorView extends JFrame {
     private Car[][][] cars;
     
     static JLabel  totalLabel;
+    static String  state;
 
     public SimulatorView(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
         this.numberOfFloors = numberOfFloors;
@@ -56,6 +57,7 @@ public class SimulatorView extends JFrame {
         
         cancelButton.addActionListener(new ActionListener() { 
         	  public void actionPerformed(ActionEvent e) { 
+        		  Simulator.tickPause = Long.MAX_VALUE;
         	  } 
         	} );
         

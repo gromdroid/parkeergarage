@@ -20,7 +20,7 @@ public class Simulator {
     
     static int totalCars = 0;
 
-    private int tickPause = 100;
+    static long tickPause = 100;
 
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
@@ -41,11 +41,11 @@ public class Simulator {
 
     public void run() {
         for (int i = 0; i < 10000; i++) {
-            tick("start");
+            tick();
         }
     }
 
-    private void tick(String state) {
+    public void tick() {
     	advanceTime();
     	handleExit();
     	updateViews();
