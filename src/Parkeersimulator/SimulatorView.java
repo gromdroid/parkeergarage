@@ -2,6 +2,8 @@ package Parkeersimulator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SimulatorView extends JFrame {
     private CarParkView carParkView;
@@ -10,6 +12,9 @@ public class SimulatorView extends JFrame {
     private int numberOfPlaces;
     private int numberOfOpenSpots;
     private Car[][][] cars;
+    
+    static JLabel  totalLabel;
+    static String  state;
 
     public SimulatorView(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
         this.numberOfFloors = numberOfFloors;
@@ -19,11 +24,61 @@ public class SimulatorView extends JFrame {
         cars = new Car[numberOfFloors][numberOfRows][numberOfPlaces];
         
         carParkView = new CarParkView();
+        
+        //create frame with menubar
+        JFrame frame = new JFrame("Parkeergarage");
+        JMenuBar menubar = new JMenuBar();
+        frame.setJMenuBar(menubar);
+        frame.setSize(1000, 400);
+		frame.setResizable(false);
+        
+        //create the file menu
+        JMenu fileMenu = new JMenu("Menu");
+        menubar.add(fileMenu);
+        
+        JMenuItem openItem = new JMenuItem("Item 1");
+        //openItem.addActionListener(this);
+        fileMenu.add(openItem);
+        
+        JMenuItem quitItem = new JMenuItem("Item 2");
+        //quitItem.addActionListener(this);
+        fileMenu.add(quitItem);
+        
+        Container contentPane = frame.getContentPane();
+        contentPane.add(carParkView, BorderLayout.NORTH);
+        contentPane.setSize(300, 200);
+        
+        //Add panel for buttons
+        JPanel buttonPanel = new JPanel();
+        
+        JButton okButton = new JButton("OK");        
+        JButton javaButton = new JButton("Submit");
+        JButton cancelButton = new JButton("Cancel");
+        
+        cancelButton.addActionListener(new ActionListener() { 
+        	  public void actionPerformed(ActionEvent e) { 
+        		  Simulator.tickPause = Long.MAX_VALUE;
+        	  } 
+        	} );
+        
+        
+        buttonPanel.add(okButton, BorderLayout.WEST);
+        buttonPanel.add(javaButton, BorderLayout.CENTER);
+        buttonPanel.add(cancelButton, BorderLayout.EAST);
+        
+        
+        //Add panel for information text
+        JPanel textPanel = new JPanel();
+        totalLabel = new JLabel("Totaal: ");
+        
+        textPanel.add(totalLabel);
 
-        Container contentPane = getContentPane();
-        contentPane.add(carParkView, BorderLayout.CENTER);
-        pack();
-        setVisible(true);
+        
+        contentPane.add(buttonPanel, BorderLayout.CENTER);
+        contentPane.add(textPanel, BorderLayout.SOUTH);
+
+        frame.pack();
+        frame.setVisible(true);
 
         updateView();
     }
@@ -152,7 +207,7 @@ public class SimulatorView extends JFrame {
          * Overridden. Tell the GUI manager how big we would like to be.
          */
         public Dimension getPreferredSize() {
-            return new Dimension(800, 500);
+            return new Dimension(850, 400);
         }
     
         /**

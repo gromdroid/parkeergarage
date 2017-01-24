@@ -17,18 +17,22 @@ public class Simulator {
     private int day = 0;
     private int hour = 0;
     private int minute = 0;
+    
+    static int totalCars = 0;
 
-    private int tickPause = 100;
+    static long tickPause = 100;
 
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
     int weekDayPassArrivals= 50; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
+    
+    int test;
 
     int enterSpeed = 3; // number of cars that can enter per minute
     int paymentSpeed = 7; // number of cars that can pay per minute
     int exitSpeed = 5; // number of cars that can leave per minute
-
+    
     public Simulator() {
         entranceCarQueue = new CarQueue();
         entrancePassQueue = new CarQueue();
@@ -43,7 +47,7 @@ public class Simulator {
         }
     }
 
-    private void tick() {
+    public void tick() {
     	advanceTime();
     	handleExit();
     	updateViews();
@@ -89,6 +93,7 @@ public class Simulator {
     	simulatorView.tick();
         // Update the car park view.
         simulatorView.updateView();	
+        SimulatorView.totalLabel.setText(String.valueOf(totalCars));
     }
     
     private void carsArriving(){
@@ -108,6 +113,7 @@ public class Simulator {
             Location freeLocation = simulatorView.getFirstFreeLocation();
             simulatorView.setCarAt(freeLocation, car);
             i++;
+        	totalCars++;
         }
     }
     
@@ -179,6 +185,7 @@ public class Simulator {
     private void carLeavesSpot(Car car){
     	simulatorView.removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
+        totalCars--;
     }
 
 }
