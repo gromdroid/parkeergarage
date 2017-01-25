@@ -30,7 +30,7 @@ public class SimulatorView extends JFrame {
         JMenuBar menubar = new JMenuBar();
         frame.setJMenuBar(menubar);
         frame.setSize(1000, 400);
-		frame.setResizable(false);
+		frame.setResizable(true);
         
         //create the file menu
         JMenu fileMenu = new JMenu("Menu");
@@ -51,20 +51,45 @@ public class SimulatorView extends JFrame {
         //Add panel for buttons
         JPanel buttonPanel = new JPanel();
         
-        JButton okButton = new JButton("OK");        
-        JButton javaButton = new JButton("Submit");
-        JButton cancelButton = new JButton("Cancel");
+        JButton fastButton = new JButton("Faster");   
         
-        cancelButton.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) { 
-        		  Simulator.tickPause = Long.MAX_VALUE;
+        fastButton.addActionListener(new ActionListener() { 
+        	  public void actionPerformed(ActionEvent e) {
+        		  Simulator.tickPause -= 50;
         	  } 
+        		  
         	} );
         
         
-        buttonPanel.add(okButton, BorderLayout.WEST);
-        buttonPanel.add(javaButton, BorderLayout.CENTER);
-        buttonPanel.add(cancelButton, BorderLayout.EAST);
+        JButton pauseButton = new JButton("Pause");
+        
+        pauseButton.addActionListener(new ActionListener() { 
+        	  public void actionPerformed(ActionEvent e) {
+        		  if(pauseButton.getText() == "Pause"){
+        			  Simulator.pauseState = !Simulator.pauseState;
+        			  pauseButton.setText("Resume");
+        		  } else {
+        			  Simulator.pauseState = !Simulator.pauseState;
+        			  pauseButton.setText("Pause");
+        		  }
+        	  } 
+        		  
+        	} );
+        
+        
+        JButton slowButton = new JButton("Slower");
+        
+        slowButton.addActionListener(new ActionListener() { 
+      	  public void actionPerformed(ActionEvent e) {
+    		  Simulator.tickPause += 50;
+
+      	  } 
+      		  
+      	} );
+        
+        buttonPanel.add(fastButton, BorderLayout.WEST);
+        buttonPanel.add(pauseButton, BorderLayout.CENTER);
+        buttonPanel.add(slowButton, BorderLayout.EAST);
         
         
         //Add panel for information text

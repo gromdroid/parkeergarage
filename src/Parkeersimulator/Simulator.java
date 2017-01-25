@@ -18,19 +18,20 @@ public class Simulator {
     private int hour = 0;
     private int minute = 0;
     
-    static int totalCars = 0;
+    static int totalCarsParking = 0;
+    static int totalCarsQueue = 0;
+    static int totalCarsPaying = 0;
 
     static long tickPause = 100;
+    static boolean pauseState;
 
-    int weekDayArrivals= 100; // average number of arriving cars per hour
+    int weekDayArrivals= 10000; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
     int weekDayPassArrivals= 50; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
     
-    int test;
-
     int enterSpeed = 3; // number of cars that can enter per minute
-    int paymentSpeed = 7; // number of cars that can pay per minute
+    int paymentSpeed = 1; // number of cars that can pay per minute
     int exitSpeed = 5; // number of cars that can leave per minute
     
     public Simulator() {
@@ -41,9 +42,10 @@ public class Simulator {
         simulatorView = new SimulatorView(3, 6, 30);
     }
 
+    
     public void run() {
-        for (int i = 0; i < 10000; i++) {
-            tick();
+        while (0 == 0 ) {
+        	tick();
         }
     }
 
@@ -61,6 +63,7 @@ public class Simulator {
     }
 
     private void advanceTime(){
+    	if(!pauseState){
         // Advance the time by one minute.
         minute++;
         while (minute > 59) {
@@ -74,26 +77,43 @@ public class Simulator {
         while (day > 6) {
             day -= 7;
         }
+    	} else {
+    		//do nothing
+    	}
 
     }
 
     private void handleEntrance(){
+    	if(!pauseState){
     	carsArriving();
     	carsEntering(entrancePassQueue);
-    	carsEntering(entranceCarQueue);  	
+    	carsEntering(entranceCarQueue); 
+    	} else {
+    		//do nothing
+    	}
     }
     
     private void handleExit(){
+    	if(!pauseState){
         carsReadyToLeave();
         carsPaying();
         carsLeaving();
+    	} else {
+    		//do nothing
+    	}
     }
     
     private void updateViews(){
+    	if(!pauseState){
     	simulatorView.tick();
         // Update the car park view.
         simulatorView.updateView();	
-        SimulatorView.totalLabel.setText(String.valueOf(totalCars));
+        SimulatorView.totalLabel.setText("<html>Total amount of cars parked: " + String.valueOf(totalCarsParking) + "<br> "
+        		+ "Total amount of cars in queue: " + String.valueOf(totalCarsQueue) + "<br> "
+        		+ "Total amount of people paying: " + String.valueOf(totalCarsPaying) + "</html>");
+    	} else {
+    		//do nothing
+    	}
     }
     
     private void carsArriving(){
@@ -113,7 +133,8 @@ public class Simulator {
             Location freeLocation = simulatorView.getFirstFreeLocation();
             simulatorView.setCarAt(freeLocation, car);
             i++;
-        	totalCars++;
+            totalCarsQueue = queue.carsInQueue();
+            totalCarsParking++;
         }
     }
     
@@ -139,6 +160,7 @@ public class Simulator {
             Car car = paymentCarQueue.removeCar();
             // TODO Handle payment.
             carLeavesSpot(car);
+            totalCarsPaying = paymentCarQueue.carsInQueue();
             i++;
     	}
     }
@@ -185,7 +207,7 @@ public class Simulator {
     private void carLeavesSpot(Car car){
     	simulatorView.removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
-        totalCars--;
+        totalCarsParking--;
     }
 
 }

@@ -2,9 +2,11 @@ package Parkeersimulator;
 
 public class Main {
 	
+	static Simulator sim;
+	
 	public static void main(String[] args){
 		
-	Simulator sim = new Simulator();
+	sim = new Simulator();
 	sim.run();
 	
 	}
