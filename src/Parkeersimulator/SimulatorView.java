@@ -55,7 +55,7 @@ public class SimulatorView extends JFrame {
         
         fastButton.addActionListener(new ActionListener() { 
         	  public void actionPerformed(ActionEvent e) {
-        		  Simulator.tickPause -= 50;
+        		  Simulator.tickPause *= 0.5;
         	  } 
         		  
         	} );
@@ -81,7 +81,7 @@ public class SimulatorView extends JFrame {
         
         slowButton.addActionListener(new ActionListener() { 
       	  public void actionPerformed(ActionEvent e) {
-    		  Simulator.tickPause += 50;
+    		  Simulator.tickPause *= 2;
 
       	  } 
       		  

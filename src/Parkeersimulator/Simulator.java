@@ -18,9 +18,9 @@ public class Simulator {
     private int hour = 0;
     private int minute = 0;
     
-    static int totalCarsParking = 0;
-    static int totalCarsQueue = 0;
-    static int totalCarsPaying = 0;
+    static int totalCarsParking;
+    static int totalCarsQueue;
+    static int totalCarsPaying;
 
     static long tickPause = 100;
     static boolean pauseState;
@@ -133,9 +133,9 @@ public class Simulator {
             Location freeLocation = simulatorView.getFirstFreeLocation();
             simulatorView.setCarAt(freeLocation, car);
             i++;
-            totalCarsQueue = queue.carsInQueue();
             totalCarsParking++;
         }
+    	totalCarsQueue = queue.carsInQueue();
     }
     
     private void carsReadyToLeave(){
