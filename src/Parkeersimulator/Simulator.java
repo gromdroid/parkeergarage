@@ -95,7 +95,7 @@ public class Simulator {
     	carsEntering(entranceCarQueue);
     	carsEntering(entranceElectricQueue);
     	} else {
-    		//do nothing
+    		//do nothing electric car toegevoegd
     	}
     }
     
