@@ -8,6 +8,7 @@ public abstract class Car {
     private int minutesLeft;
     private boolean isPaying;
     private boolean hasToPay;
+    private String type;
 
     /**
      * Constructor for objects of class Car
@@ -43,9 +44,17 @@ public abstract class Car {
     public boolean getHasToPay() {
         return hasToPay;
     }
+    
+    public String getType(){
+    	return type;
+    }
 
     public void setHasToPay(boolean hasToPay) {
         this.hasToPay = hasToPay;
+    }
+    
+    public void setType(String type){
+    	this.type = type;
     }
 
     public void tick() {

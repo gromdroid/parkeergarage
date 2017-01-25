@@ -1,9 +1,22 @@
 package Parkeersimulator;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class SimulatorView extends JFrame {
     private CarParkView carParkView;
@@ -15,6 +28,8 @@ public class SimulatorView extends JFrame {
     
     static JLabel  totalLabel;
     static String  state;
+    JButton reset, pauseButton;
+    static DefaultPieDataset piedataset;
 
     public SimulatorView(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
         this.numberOfFloors = numberOfFloors;
@@ -27,29 +42,36 @@ public class SimulatorView extends JFrame {
         
         //create frame with menubar
         JFrame frame = new JFrame("Parkeergarage");
-        JMenuBar menubar = new JMenuBar();
-        frame.setJMenuBar(menubar);
-        frame.setSize(1000, 400);
-		frame.setResizable(true);
         
-        //create the file menu
-        JMenu fileMenu = new JMenu("Menu");
-        menubar.add(fileMenu);
+        //main panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2,2,3,3));
+        panel.setBackground(Color.black);
         
-        JMenuItem openItem = new JMenuItem("Item 1");
-        //openItem.addActionListener(this);
-        fileMenu.add(openItem);
+        carParkView.setBackground(Color.black);
         
-        JMenuItem quitItem = new JMenuItem("Item 2");
-        //quitItem.addActionListener(this);
-        fileMenu.add(quitItem);
+        //pieChart
+        piedataset = new DefaultPieDataset();  
+        piedataset.setValue("Normal cars", 0);  
+        piedataset.setValue("Passholders", 0);  
+        piedataset.setValue("Electric spots", 0);  
+        JFreeChart piechart = ChartFactory.createPieChart(  
+          null,   // Title  
+          piedataset,             // Dataset  
+          true,                   // Show legend  
+          false,                   // Use tooltips  
+          false                   // Generate URLs  
+        );  
+        piechart.removeLegend();
+        piechart.getPlot().setOutlineVisible(false);
+        piechart.getPlot().setBackgroundPaint(Color.white);
         
-        Container contentPane = frame.getContentPane();
-        contentPane.add(carParkView, BorderLayout.NORTH);
-        contentPane.setSize(300, 200);
-        
+        //piechart panel
+        ChartPanel chPanel = new ChartPanel(piechart); //creating the chart panel, which extends JPanel
+        chPanel.setBackground(Color.white);
         //Add panel for buttons
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Color.white);
         
         JButton fastButton = new JButton("Faster");   
         
@@ -65,13 +87,13 @@ public class SimulatorView extends JFrame {
         	} );
         
         
-        JButton pauseButton = new JButton("Pause");
+        pauseButton = new JButton("Pause");
         
         pauseButton.addActionListener(new ActionListener() { 
         	  public void actionPerformed(ActionEvent e) {
         		  if(pauseButton.getText() == "Pause"){
         			  Simulator.pauseState = !Simulator.pauseState;
-        			  pauseButton.setText("Resume");
+        			  pauseButton.setText("Start");
         		  } else {
         			  Simulator.pauseState = !Simulator.pauseState;
         			  pauseButton.setText("Pause");
@@ -94,7 +116,7 @@ public class SimulatorView extends JFrame {
       		  
       	} );
         
-        JButton reset = new JButton("Reset");
+        reset = new JButton("Reset");
         
         reset.addActionListener(new ActionListener() { 
       	  public void actionPerformed(ActionEvent e) {
@@ -104,7 +126,17 @@ public class SimulatorView extends JFrame {
       		Simulator.week = 0;
       		
       		Simulator.deleteCars();
-      	  } 
+      		Simulator.simulatorView.updateView();
+      		
+      			if(pauseButton.getText() == "Pause"){
+        			  Simulator.pauseState = !Simulator.pauseState;
+        			  pauseButton.setText("Start");
+            		} else {
+        			  Simulator.pauseState = !Simulator.pauseState;
+        			  pauseButton.setText("Pause");
+            		}	
+      		}
+      	  
       		  
       	} );
         
@@ -116,18 +148,91 @@ public class SimulatorView extends JFrame {
         
         //Add panel for information text
         JPanel textPanel = new JPanel();
+        textPanel.setBackground(Color.white);
         totalLabel = new JLabel("Totaal: ");
         
         textPanel.add(totalLabel);
-
         
-        contentPane.add(buttonPanel, BorderLayout.CENTER);
-        contentPane.add(textPanel, BorderLayout.SOUTH);
 
+        panel.add(carParkView);
+        panel.add(buttonPanel);
+        panel.add(chPanel);
+        panel.add(textPanel);
+        frame.add(panel);
+        
+        JMenuBar menubar = new JMenuBar();
+        frame.setJMenuBar(menubar);
+        frame.setSize(1000, 400);
+		frame.setResizable(true);
+        
+        //create the file menu
+        JMenu fileMenu = new JMenu("Export");
+        menubar.add(fileMenu);
+        
+        JMenuItem expSim = new JMenuItem("Simulator");
+        expSim.addActionListener((ActionEvent event) -> {
+        	BufferedImage bi = new BufferedImage(carParkView.getSize().width, carParkView.getSize().height, BufferedImage.TYPE_INT_ARGB); 
+			Graphics g = bi.createGraphics();
+			carParkView.paint(g);  //this == JComponent
+			g.dispose();
+			try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - simulator - " + Simulator.time + ".png"));}catch (Exception e1) {}
+        });
+        //openItem.addActionListener(this);
+        fileMenu.add(expSim);
+        
+        JMenuItem expChart = new JMenuItem("Pie Chart");
+        expSim.addActionListener((ActionEvent event) -> {
+        BufferedImage bi = new BufferedImage(chPanel.getSize().width, chPanel.getSize().height, BufferedImage.TYPE_INT_ARGB); 
+		Graphics g = bi.createGraphics();
+		textPanel.paint(g);  //this == JComponent
+		g.dispose();
+		try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - pie chart - " + Simulator.time + ".png"));}catch (Exception e1) {}
+        });
+		//quitItem.addActionListener(this);
+        fileMenu.add(expChart);
+        
+        JMenuItem expText = new JMenuItem("Info Text");
+        expSim.addActionListener((ActionEvent event) -> {
+        BufferedImage bi = new BufferedImage(textPanel.getSize().width, textPanel.getSize().height, BufferedImage.TYPE_INT_ARGB); 
+		Graphics g = bi.createGraphics();
+		textPanel.paint(g);  //this == JComponent
+		g.dispose();
+		try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - info text - " + Simulator.time + ".png"));}catch (Exception e1) {}
+        });
+		//quitItem.addActionListener(this);
+        fileMenu.add(expText);
+        
+        JMenuItem expAll = new JMenuItem("All");
+        expSim.addActionListener((ActionEvent event) -> {
+        	BufferedImage bi = new BufferedImage(panel.getSize().width, panel.getSize().height, BufferedImage.TYPE_INT_ARGB); 
+    		Graphics g = bi.createGraphics();
+    		panel.paint(g);  //this == JComponent
+    		g.dispose();
+    		try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - all - " + Simulator.time + ".png"));}catch (Exception e1) {}
+        });
+        //quitItem.addActionListener(this);
+        fileMenu.add(expAll);
+        
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
 
         updateView();
+    }
+    
+    public Location getFirstUsedLocation() {
+        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+            for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) != null) {
+                    	removeCarAt(location);
+                        return location;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public void updateView() {
@@ -277,6 +382,7 @@ public class SimulatorView extends JFrame {
         }
     
         public void updateView() {
+        	setBackground(Color.white);
             // Create a new car park image if the size has changed.
             if (!size.equals(getSize())) {
                 size = getSize();
