@@ -55,7 +55,11 @@ public class SimulatorView extends JFrame {
         
         fastButton.addActionListener(new ActionListener() { 
         	  public void actionPerformed(ActionEvent e) {
-        		  Simulator.tickPause *= 0.5;
+        		  if(Simulator.tickPause < 7){
+          			  
+          		  } else {
+          			Simulator.tickPause *= 0.5;
+          		  }
         	  } 
         		  
         	} );
@@ -81,8 +85,25 @@ public class SimulatorView extends JFrame {
         
         slowButton.addActionListener(new ActionListener() { 
       	  public void actionPerformed(ActionEvent e) {
-    		  Simulator.tickPause *= 2;
-
+      		  if(Simulator.tickPause > 1600){
+      			  
+      		  } else {
+      			Simulator.tickPause *= 2;
+      		  }
+      	  } 
+      		  
+      	} );
+        
+        JButton reset = new JButton("Reset");
+        
+        reset.addActionListener(new ActionListener() { 
+      	  public void actionPerformed(ActionEvent e) {
+      		Simulator.minute = 0;
+      		Simulator.hour = 0;
+      		Simulator.day = 0;
+      		Simulator.week = 0;
+      		
+      		Simulator.deleteCars();
       	  } 
       		  
       	} );
@@ -90,6 +111,7 @@ public class SimulatorView extends JFrame {
         buttonPanel.add(fastButton, BorderLayout.WEST);
         buttonPanel.add(pauseButton, BorderLayout.CENTER);
         buttonPanel.add(slowButton, BorderLayout.EAST);
+        buttonPanel.add(reset, BorderLayout.SOUTH);
         
         
         //Add panel for information text

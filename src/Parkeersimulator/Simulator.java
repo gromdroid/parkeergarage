@@ -8,15 +8,18 @@ public class Simulator {
 	private static final String PASS = "2";
 	
 	
-	private CarQueue entranceCarQueue;
-    private CarQueue entrancePassQueue;
+	private static CarQueue entranceCarQueue;
+    private static CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
     private SimulatorView simulatorView;
-
-    private int day = 0;
-    private int hour = 0;
-    private int minute = 0;
+    
+    static int week = 0;
+    static int day = 0;
+    static int hour = 0;
+    static int minute = 0;
+    
+    String timeHour, timeMinute;
     
     static int totalCarsParking;
     static int totalCarsQueue;
@@ -25,7 +28,7 @@ public class Simulator {
     static long tickPause = 100;
     static boolean pauseState;
 
-    int weekDayArrivals= 10000; // average number of arriving cars per hour
+    int weekDayArrivals= 200; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
     int weekDayPassArrivals= 50; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
@@ -76,6 +79,7 @@ public class Simulator {
         }
         while (day > 6) {
             day -= 7;
+            week++;
         }
     	} else {
     		//do nothing
@@ -108,9 +112,25 @@ public class Simulator {
     	simulatorView.tick();
         // Update the car park view.
         simulatorView.updateView();	
+        
+        if(hour < 10){
+        	timeHour = "0" + hour;
+        } else {
+        	timeHour = String.valueOf(hour);
+        }
+        
+        if(minute < 10){
+        	timeMinute = "0" + minute;
+        } else {
+        	timeMinute = String.valueOf(minute);
+        }
+        String time = timeHour + ":" + timeMinute;
         SimulatorView.totalLabel.setText("<html>Total amount of cars parked: " + String.valueOf(totalCarsParking) + "<br> "
         		+ "Total amount of cars in queue: " + String.valueOf(totalCarsQueue) + "<br> "
-        		+ "Total amount of people paying: " + String.valueOf(totalCarsPaying) + "</html>");
+        		+ "Total amount of people paying: " + String.valueOf(totalCarsPaying) + "<br>"
+        		+ "Time passed: " + time + "<br> "
+        		+ "Days passed: " + String.valueOf(day) + "<br> "
+        		+ "Weeks passed: " + String.valueOf(week) + "</html>");
     	} else {
     		//do nothing
     	}
@@ -136,6 +156,11 @@ public class Simulator {
             totalCarsParking++;
         }
     	totalCarsQueue = queue.carsInQueue();
+    }
+    
+    public static void deleteCars(){
+    	entrancePassQueue.clearQueue();
+    	entranceCarQueue.clearQueue();
     }
     
     private void carsReadyToLeave(){
