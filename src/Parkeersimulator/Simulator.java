@@ -6,10 +6,12 @@ public class Simulator {
 
 	private static final String AD_HOC = "1";
 	private static final String PASS = "2";
+	private static final String Electric = "3";
 	
 	
 	private CarQueue entranceCarQueue;
     private CarQueue entrancePassQueue;
+    private CarQueue entranceElectricQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
     private SimulatorView simulatorView;
@@ -29,6 +31,8 @@ public class Simulator {
     int weekendArrivals = 200; // average number of arriving cars per hour
     int weekDayPassArrivals= 50; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
+    int weekDayElectricArrivals= 50; //average number of electric cars per hour
+    int weekendElectricArrivals= 5; //average number of electric cars per hour
     
     int enterSpeed = 3; // number of cars that can enter per minute
     int paymentSpeed = 1; // number of cars that can pay per minute
@@ -37,6 +41,7 @@ public class Simulator {
     public Simulator() {
         entranceCarQueue = new CarQueue();
         entrancePassQueue = new CarQueue();
+        entranceElectricQueue = new CarQueue();
         paymentCarQueue = new CarQueue();
         exitCarQueue = new CarQueue();
         simulatorView = new SimulatorView(3, 6, 30);
@@ -87,7 +92,8 @@ public class Simulator {
     	if(!pauseState){
     	carsArriving();
     	carsEntering(entrancePassQueue);
-    	carsEntering(entranceCarQueue); 
+    	carsEntering(entranceCarQueue);
+    	carsEntering(entranceElectricQueue);
     	} else {
     		//do nothing
     	}
@@ -120,7 +126,9 @@ public class Simulator {
     	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
         addArrivingCars(numberOfCars, AD_HOC);    	
     	numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
-        addArrivingCars(numberOfCars, PASS);    	
+        addArrivingCars(numberOfCars, PASS);
+        numberOfCars=getNumberOfCars(weekDayElectricArrivals, weekendElectricArrivals);
+        addArrivingCars(numberOfCars, Electric);
     }
 
     private void carsEntering(CarQueue queue){
@@ -200,7 +208,12 @@ public class Simulator {
             for (int i = 0; i < numberOfCars; i++) {
             	entrancePassQueue.addCar(new ParkingPassCar());
             }
-            break;	            
+            break;
+    	case Electric:
+    		for (int i = 0; i < numberOfCars; i++) {
+    			entranceElectricQueue.addCar(new ParkingCarElectric());
+    		}
+    		break;
     	}
     }
     
