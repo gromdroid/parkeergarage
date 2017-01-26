@@ -6,6 +6,7 @@ import javax.swing.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.xy.XYDataset;
@@ -54,7 +55,8 @@ public class SimulatorView extends JFrame {
         piedataset = new DefaultPieDataset();  
         piedataset.setValue("Normal cars", 0);  
         piedataset.setValue("Passholders", 0);  
-        piedataset.setValue("Electric spots", 0);  
+        piedataset.setValue("Electric spots", 0); 
+        piedataset.setValue("Electric spots with pass", 0);  
         JFreeChart piechart = ChartFactory.createPieChart(  
           null,   // Title  
           piedataset,             // Dataset  
@@ -62,6 +64,14 @@ public class SimulatorView extends JFrame {
           false,                   // Use tooltips  
           false                   // Generate URLs  
         );  
+        
+        PiePlot plot = (PiePlot) piechart.getPlot();
+
+        plot.setSectionPaint("Normal cars", Color.red);
+        plot.setSectionPaint("Passholders", Color.blue);
+        plot.setSectionPaint("Electric cars", Color.green);
+        plot.setSectionPaint("Electric cars with pass", Color.orange);
+        
         piechart.removeLegend();
         piechart.getPlot().setOutlineVisible(false);
         piechart.getPlot().setBackgroundPaint(Color.white);
@@ -290,17 +300,81 @@ public class SimulatorView extends JFrame {
         return car;
     }
 
-    public Location getFirstFreeLocation() {
-        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
-            for (int row = 0; row < getNumberOfRows(); row++) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    if (getCarAt(location) == null) {
-                        return location;
+    public Location getFirstFreeLocation(String type) {
+    	if(type == "N"){
+    		for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+    			if(floor == 0){
+    				for (int row = 4; row < getNumberOfRows(); row++) {
+                        for (int place = 0; place < getNumberOfPlaces(); place++) {
+                            Location location = new Location(floor, row, place);
+                            if (getCarAt(location) == null) {
+                                return location;
+                            }
+                        }
+                    }
+    			} else if(floor == 1) {
+    				for (int row = 0; row < getNumberOfRows(); row++) {
+                        for (int place = 0; place < getNumberOfPlaces(); place++) {
+                            Location location = new Location(floor, row, place);
+                            if (getCarAt(location) == null) {
+                                return location;
+                            }
+                        }
+                    }
+    			} else {
+    				for (int row = 0; row < 5; row++) {
+                        for (int place = 0; place < getNumberOfPlaces(); place++) {
+                            Location location = new Location(floor, row, place);
+                            if (getCarAt(location) == null) {
+                                return location;
+                            }
+                        }
+                    }
+    			}
+            }
+    	} else if(type == "P"){
+    		for (int floor = 0; floor < 1; floor++) {
+                for (int row = 0; row < 4; row++) {
+                	if(row >= 1){
+                		for (int place = 0; place < getNumberOfPlaces(); place++) {
+                            Location location = new Location(floor, row, place);
+                            if (getCarAt(location) == null) {
+                                return location;
+                            }
+                        }
+                	} else {
+                		for (int place = 15; place < getNumberOfPlaces(); place++) {
+                            Location location = new Location(floor, row, place);
+                            if (getCarAt(location) == null) {
+                                return location;
+                            }
+                        }
+                	}
+                }
+            }
+    	} else if(type == "E"){
+    		for (int floor = 2; floor < getNumberOfFloors(); floor++) {
+                for (int row = 5; row < getNumberOfRows(); row++) {
+                    for (int place = 0; place < getNumberOfPlaces(); place++) {
+                        Location location = new Location(floor, row, place);
+                        if (getCarAt(location) == null) {
+                            return location;
+                        }
                     }
                 }
             }
-        }
+    	} else {
+    		for (int floor = 0; floor < 1; floor++) {
+                for (int row = 0; row < 1; row++) {
+                    for (int place = 0; place < 15; place++) {
+                        Location location = new Location(floor, row, place);
+                        if (getCarAt(location) == null) {
+                            return location;
+                        }
+                    }
+                }
+            }
+    	}
         return null;
     }
 

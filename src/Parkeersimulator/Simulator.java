@@ -1,12 +1,14 @@
 package Parkeersimulator;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Random;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 public class Simulator {
@@ -14,12 +16,14 @@ public class Simulator {
 	private static final String AD_HOC = "1";
 	private static final String PASS = "2";
 	private static final String Electric = "3";
+	private static final String PassElectric = "4";
 	
 	
 
 	private static CarQueue entranceCarQueue;
     private static CarQueue entrancePassQueue;
     private static CarQueue entranceElectricQueue;
+    private static CarQueue entrancePassElectricQueue;
 
     private static CarQueue paymentCarQueue;
     private static CarQueue exitCarQueue;
@@ -36,6 +40,7 @@ public class Simulator {
     static int totalCarsParkingE;
     static int totalCarsParkingN;
     static int totalCarsParkingP;
+    static int totalCarsParkingPE;
     static int totalCarsQueue;
     static int totalCarsPaying;
 
@@ -44,10 +49,12 @@ public class Simulator {
 
     int weekDayArrivals= 175; // average number of arriving cars per hour
     int weekendArrivals = 275; // average number of arriving cars per hour
-    int weekDayPassArrivals= 50; // average number of arriving cars per hour
+    int weekDayPassArrivals= 30; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
-    int weekDayElectricArrivals= 25; //average number of electric cars per hour
+    int weekDayElectricArrivals= 20; //average number of electric cars per hour
     int weekendElectricArrivals= 5; //average number of electric cars per hour
+    int weekDayPassElectricArrivals= 20; //average number of electric cars per hour
+    int weekendPassElectricArrivals= 5; //average number of electric cars per hour
     
     int enterSpeed = 3; // number of cars that can enter per minute
     int paymentSpeed = 7; // number of cars that can pay per minute
@@ -57,6 +64,7 @@ public class Simulator {
         entranceCarQueue = new CarQueue();
         entrancePassQueue = new CarQueue();
         entranceElectricQueue = new CarQueue();
+        entrancePassElectricQueue = new CarQueue();
         paymentCarQueue = new CarQueue();
         exitCarQueue = new CarQueue();
         simulatorView = new SimulatorView(3, 6, 30);
@@ -110,6 +118,7 @@ public class Simulator {
     	carsEntering(entrancePassQueue);
     	carsEntering(entranceCarQueue);
     	carsEntering(entranceElectricQueue);
+    	carsEntering(entrancePassElectricQueue);
     	} else {
     		//do nothing electric car toegevoegd
     	}
@@ -133,7 +142,8 @@ public class Simulator {
         
         SimulatorView.piedataset.setValue("Normal cars", totalCarsParkingN);  
         SimulatorView.piedataset.setValue("Passholders", totalCarsParkingP);  
-        SimulatorView.piedataset.setValue("Electric spots", totalCarsParkingE);  
+        SimulatorView.piedataset.setValue("Electric cars", totalCarsParkingE);  
+        SimulatorView.piedataset.setValue("Electric cars with pass", totalCarsParkingPE); 
         
         if(hour < 10){
         	timeHour = "0" + hour;
@@ -165,6 +175,8 @@ public class Simulator {
         addArrivingCars(numberOfCars, PASS);
         numberOfCars=getNumberOfCars(weekDayElectricArrivals, weekendElectricArrivals);
         addArrivingCars(numberOfCars, Electric);
+        numberOfCars=getNumberOfCars(weekDayPassElectricArrivals, weekendPassElectricArrivals);
+        addArrivingCars(numberOfCars, PassElectric);
     }
 
     private void carsEntering(CarQueue queue){
@@ -174,7 +186,7 @@ public class Simulator {
     			simulatorView.getNumberOfOpenSpots()>0 && 
     			i<enterSpeed) {
             Car car = queue.removeCar();
-            Location freeLocation = simulatorView.getFirstFreeLocation();
+            Location freeLocation = simulatorView.getFirstFreeLocation(car.getType());
             simulatorView.setCarAt(freeLocation, car);
             i++;
             //totalCarsParking++;
@@ -186,6 +198,7 @@ public class Simulator {
     	entrancePassQueue.clearQueue();
     	entranceCarQueue.clearQueue();
     	entranceElectricQueue.clearQueue();
+    	entrancePassElectricQueue.clearQueue();
     	paymentCarQueue.clearQueue();
     	exitCarQueue.clearQueue();
     	totalCarsParkingE = 0;
@@ -195,7 +208,8 @@ public class Simulator {
     	
     	SimulatorView.piedataset.setValue("Normal cars", 0);  
         SimulatorView.piedataset.setValue("Passholders", 0);  
-        SimulatorView.piedataset.setValue("Electric spots", 0);
+        SimulatorView.piedataset.setValue("Electric cars", 0);  
+        SimulatorView.piedataset.setValue("Electric cars with pass", 0); 
     	
     	for(int i = 0; i < 539; i++){
     		Location usedLocation = simulatorView.getFirstUsedLocation();
@@ -283,6 +297,12 @@ public class Simulator {
     			totalCarsParkingE++;
     		}
     		break;
+    	case PassElectric:
+    		for (int i = 0; i < numberOfCars; i++) {
+    			entrancePassElectricQueue.addCar(new ParkingCarPassElectric());
+    			totalCarsParkingPE++;
+    		}
+    		break;
     	}
     }
     
@@ -295,6 +315,8 @@ public class Simulator {
     		totalCarsParkingE--;
     	} else if(car.getType() == "P"){
     		totalCarsParkingP--;
+    	} else if(car.getType() == "PE"){
+    		totalCarsParkingPE--;
     	}
     }
 
