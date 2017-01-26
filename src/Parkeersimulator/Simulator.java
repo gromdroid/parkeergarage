@@ -47,11 +47,11 @@ public class Simulator {
     static long tickPause = 100;
     static boolean pauseState;
 
-    int weekDayArrivals= 175; // average number of arriving cars per hour
+    static int weekDayArrivals= 175; // average number of arriving cars per hour
     int weekendArrivals = 275; // average number of arriving cars per hour
-    int weekDayPassArrivals= 30; // average number of arriving cars per hour
+    static int weekDayPassArrivals= 30; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
-    int weekDayElectricArrivals= 20; //average number of electric cars per hour
+    static int weekDayElectricArrivals= 20; //average number of electric cars per hour
     int weekendElectricArrivals= 5; //average number of electric cars per hour
     int weekDayPassElectricArrivals= 20; //average number of electric cars per hour
     int weekendPassElectricArrivals= 5; //average number of electric cars per hour
@@ -140,7 +140,7 @@ public class Simulator {
         // Update the car park view.
         simulatorView.updateView();	
         
-        int totalFreeSpots = 540 - (totalCarsParkingN + totalCarsParkingP + totalCarsParkingP + totalCarsParkingPE);
+        int totalFreeSpots = 540 - (totalCarsParkingN + totalCarsParkingP + totalCarsParkingE + totalCarsParkingPE);
         SimulatorView.piedataset.setValue("Normal cars", totalCarsParkingN);  
         SimulatorView.piedataset.setValue("Passholders", totalCarsParkingP);  
         SimulatorView.piedataset.setValue("Electric cars", totalCarsParkingE);  

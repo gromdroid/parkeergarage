@@ -148,6 +148,51 @@ public class SimulatorView extends JFrame {
       		  
       	} );
         
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(3,2,2,2));
+        
+        JTextField inputNormal = new JTextField();
+        
+        JButton buttonInputNormal = new JButton("Set normal arrivals per hour");
+        buttonInputNormal.addActionListener(new ActionListener() { 
+        	  public void actionPerformed(ActionEvent e) {
+        		  Simulator.weekDayArrivals = Integer.parseInt(inputNormal.getText());
+        		}
+        	  
+        		  
+        	} );
+        
+        JTextField inputPass = new JTextField();
+        
+        JButton buttonInputPass = new JButton("Set pass arrivals per hour");
+        buttonInputPass.addActionListener(new ActionListener() { 
+        	  public void actionPerformed(ActionEvent e) {
+        		  Simulator.weekDayPassArrivals = Integer.parseInt(inputPass.getText());
+        		}
+        	  
+        		  
+        	} );
+        
+        JTextField inputElectric = new JTextField();
+        
+        JButton buttonInputElectric = new JButton("Set electric arrivals per hour");
+        buttonInputElectric.addActionListener(new ActionListener() { 
+        	  public void actionPerformed(ActionEvent e) {
+        		  Simulator.weekDayElectricArrivals = Integer.parseInt(inputElectric.getText());
+        		}
+        	  
+        		  
+        	} );
+        
+        inputPanel.add(buttonInputNormal);
+        inputPanel.add(inputNormal);
+        inputPanel.add(buttonInputPass);
+        inputPanel.add(inputPass);
+        inputPanel.add(buttonInputElectric);
+        inputPanel.add(inputElectric);
+        
+        buttonPanel.add(inputPanel, BorderLayout.NORTH);
+        
         buttonPanel.add(fastButton, BorderLayout.WEST);
         buttonPanel.add(pauseButton, BorderLayout.CENTER);
         buttonPanel.add(slowButton, BorderLayout.EAST);
