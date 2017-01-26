@@ -52,6 +52,8 @@ public class SimulatorView extends JFrame {
         piedataset.setValue("Passholders", 0);  
         piedataset.setValue("Electric cars", 0); 
         piedataset.setValue("Electric cars with pass", 0);  
+        piedataset.setValue("Free spots", 0);
+        
         JFreeChart piechart = ChartFactory.createPieChart(  
           null,   // Title  
           piedataset,             // Dataset  
@@ -66,6 +68,7 @@ public class SimulatorView extends JFrame {
         plot.setSectionPaint("Passholders", Color.blue);
         plot.setSectionPaint("Electric cars", Color.green);
         plot.setSectionPaint("Electric cars with pass", Color.orange);
+        plot.setSectionPaint("Free spots", Color.white);
         
         piechart.removeLegend();
         piechart.getPlot().setOutlineVisible(false);

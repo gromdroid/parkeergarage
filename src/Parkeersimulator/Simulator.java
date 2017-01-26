@@ -140,10 +140,12 @@ public class Simulator {
         // Update the car park view.
         simulatorView.updateView();	
         
+        int totalFreeSpots = 540 - (totalCarsParkingN + totalCarsParkingP + totalCarsParkingP + totalCarsParkingPE);
         SimulatorView.piedataset.setValue("Normal cars", totalCarsParkingN);  
         SimulatorView.piedataset.setValue("Passholders", totalCarsParkingP);  
         SimulatorView.piedataset.setValue("Electric cars", totalCarsParkingE);  
-        SimulatorView.piedataset.setValue("Electric cars with pass", totalCarsParkingPE); 
+        SimulatorView.piedataset.setValue("Electric cars with pass", totalCarsParkingPE);
+        SimulatorView.piedataset.setValue("Free spots", totalFreeSpots);
         
         if(hour < 10){
         	timeHour = "0" + hour;
