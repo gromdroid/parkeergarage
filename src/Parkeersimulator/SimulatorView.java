@@ -7,12 +7,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,8 +50,8 @@ public class SimulatorView extends JFrame {
         piedataset = new DefaultPieDataset();  
         piedataset.setValue("Normal cars", 0);  
         piedataset.setValue("Passholders", 0);  
-        piedataset.setValue("Electric spots", 0); 
-        piedataset.setValue("Electric spots with pass", 0);  
+        piedataset.setValue("Electric cars", 0); 
+        piedataset.setValue("Electric cars with pass", 0);  
         JFreeChart piechart = ChartFactory.createPieChart(  
           null,   // Title  
           piedataset,             // Dataset  
@@ -179,49 +174,22 @@ public class SimulatorView extends JFrame {
         JMenu fileMenu = new JMenu("Export");
         menubar.add(fileMenu);
         
-        JMenuItem expSim = new JMenuItem("Simulator");
+        JMenuItem expSim = new JMenuItem("Save to image");
         expSim.addActionListener((ActionEvent event) -> {
         	BufferedImage bi = new BufferedImage(carParkView.getSize().width, carParkView.getSize().height, BufferedImage.TYPE_INT_ARGB); 
 			Graphics g = bi.createGraphics();
 			carParkView.paint(g);  //this == JComponent
 			g.dispose();
 			try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - simulator - " + Simulator.time + ".png"));}catch (Exception e1) {}
+        
+			BufferedImage bi1 = new BufferedImage(chPanel.getSize().width, chPanel.getSize().height, BufferedImage.TYPE_INT_ARGB); 
+			Graphics g1 = bi1.createGraphics();
+			chPanel.paint(g1);  //this == JComponent
+			g1.dispose();
+			try{ImageIO.write(bi1,"png",new File(System.getProperty("user.home") + "/SIM - pie - " + Simulator.time + ".png"));}catch (Exception e1) {}
         });
         //openItem.addActionListener(this);
         fileMenu.add(expSim);
-        
-        JMenuItem expChart = new JMenuItem("Pie Chart");
-        expSim.addActionListener((ActionEvent event) -> {
-        BufferedImage bi = new BufferedImage(chPanel.getSize().width, chPanel.getSize().height, BufferedImage.TYPE_INT_ARGB); 
-		Graphics g = bi.createGraphics();
-		textPanel.paint(g);  //this == JComponent
-		g.dispose();
-		try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - pie chart - " + Simulator.time + ".png"));}catch (Exception e1) {}
-        });
-		//quitItem.addActionListener(this);
-        fileMenu.add(expChart);
-        
-        JMenuItem expText = new JMenuItem("Info Text");
-        expSim.addActionListener((ActionEvent event) -> {
-        BufferedImage bi = new BufferedImage(textPanel.getSize().width, textPanel.getSize().height, BufferedImage.TYPE_INT_ARGB); 
-		Graphics g = bi.createGraphics();
-		textPanel.paint(g);  //this == JComponent
-		g.dispose();
-		try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - info text - " + Simulator.time + ".png"));}catch (Exception e1) {}
-        });
-		//quitItem.addActionListener(this);
-        fileMenu.add(expText);
-        
-        JMenuItem expAll = new JMenuItem("All");
-        expSim.addActionListener((ActionEvent event) -> {
-        	BufferedImage bi = new BufferedImage(panel.getSize().width, panel.getSize().height, BufferedImage.TYPE_INT_ARGB); 
-    		Graphics g = bi.createGraphics();
-    		panel.paint(g);  //this == JComponent
-    		g.dispose();
-    		try{ImageIO.write(bi,"png",new File(System.getProperty("user.home") + "/SIM - all - " + Simulator.time + ".png"));}catch (Exception e1) {}
-        });
-        //quitItem.addActionListener(this);
-        fileMenu.add(expAll);
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

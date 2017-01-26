@@ -13,6 +13,5 @@
 	<classpathentry kind="lib" path="/home/gaauwe/Downloads/Chart/jfreechart-1.0.19/lib/orsonpdf-1.6-eval.jar"/>
 	<classpathentry kind="lib" path="/home/gaauwe/Downloads/Chart/jfreechart-1.0.19/lib/servlet.jar"/>
 	<classpathentry kind="lib" path="/home/gaauwe/Downloads/Chart/jfreechart-1.0.19/lib/swtgraphics2d.jar"/>
-	<classpathentry kind="lib" path="/home/gaauwe/Downloads/Chart/xchart-3.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
