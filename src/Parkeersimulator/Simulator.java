@@ -3,6 +3,10 @@ package Parkeersimulator;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.jfree.chart.ChartFactory;
@@ -18,7 +22,11 @@ public class Simulator {
 	private static final String Electric = "3";
 	private static final String PassElectric = "4";
 	
-	
+	static int randomFloor1, randomRow1, randomPlace1, 
+	randomFloor2, randomRow2, randomPlace2, 
+	randomFloor3, randomRow3, randomPlace3, 
+	randomFloor4, randomRow4, randomPlace4,
+	randomFloor5, randomRow5, randomPlace5;
 
 	private static CarQueue entranceCarQueue;
     private static CarQueue entrancePassQueue;
@@ -34,6 +42,7 @@ public class Simulator {
     static int hour = 0;
     static int minute = 0;
     static String time;
+    static int[][] randomList;
     
     String timeHour, timeMinute;
     
@@ -72,12 +81,83 @@ public class Simulator {
 
     
     public void run() {
+    	generatePreserved();
         while (0 == 0 ) {
         	tick();
         }
     }
 
-    public void tick() {
+    public static void generatePreserved() {
+    	Random rand = new Random();
+
+    	int random1 = rand.nextInt(2-0) + 0;
+    	if(random1 == 0){
+    		randomRow1 = rand.nextInt(5-4) + 4;
+        	randomPlace1 = rand.nextInt(29-0) + 0;
+    	} else if(random1 == 1){
+    		randomRow1 = rand.nextInt(5-0) + 0;
+        	randomPlace1 = rand.nextInt(29-0) + 0;
+    	} else if(random1 == 2){
+    		randomRow1 = rand.nextInt(4-0) + 0;
+        	randomPlace1 = rand.nextInt(29-0) + 0;
+    	}
+    	randomFloor1 = random1;
+    	
+    	int random2 = rand.nextInt(2) + 0;
+    	if(random2 == 0){
+    		randomRow2 = rand.nextInt(5-4) + 4;
+        	randomPlace2 = rand.nextInt(29-0) + 0;
+    	} else if(random2 == 1){
+    		randomRow2 = rand.nextInt(5-0) + 0;
+        	randomPlace2 = rand.nextInt(29-0) + 0;
+    	} else if(random2 == 2){
+    		randomRow2 = rand.nextInt(4-0) + 0;
+        	randomPlace2 = rand.nextInt(29-0) + 0;
+    	}
+    	randomFloor2 = random2;
+    	
+    	int random3 = rand.nextInt(2) + 0;
+    	if(random3 == 0){
+    		randomRow3 = rand.nextInt(5-4) + 4;
+        	randomPlace3 = rand.nextInt(29-0) + 0;
+    	} else if(random3 == 1){
+    		randomRow3 = rand.nextInt(5-0) + 0;
+        	randomPlace3 = rand.nextInt(29-0) + 0;
+    	} else if(random3 == 2){
+    		randomRow3 = rand.nextInt(4-0) + 0;
+        	randomPlace3 = rand.nextInt(29-0) + 0;
+    	}
+    	randomFloor3 = random3;
+    	
+    	int random4 = rand.nextInt(2) + 0;
+    	if(random4 == 0){
+    		randomRow4 = rand.nextInt(5-4) + 4;
+        	randomPlace4 = rand.nextInt(29-0) + 0;
+    	} else if(random4 == 1){
+    		randomRow4 = rand.nextInt(5-0) + 0;
+        	randomPlace4 = rand.nextInt(29-0) + 0;
+    	} else if(random4 == 2){
+    		randomRow4 = rand.nextInt(4-0) + 0;
+        	randomPlace4 = rand.nextInt(29-0) + 0;
+    	}
+    	randomFloor4 = random4;
+    	
+    	int random5 = rand.nextInt(2) + 0;
+    	if(random5 == 0){
+    		randomRow5 = rand.nextInt(5-4) + 4;
+        	randomPlace5 = rand.nextInt(29-0) + 0;
+    	} else if(random5 == 1){
+    		randomRow5 = rand.nextInt(5-0) + 0;
+        	randomPlace5 = rand.nextInt(29-0) + 0;
+    	} else if(random5 == 2){
+    		randomRow5 = rand.nextInt(4-0) + 0;
+        	randomPlace5 = rand.nextInt(29-0) + 0;
+    	}
+    	randomFloor5 = random5;
+	}
+
+
+	public void tick() {
     	advanceTime();
     	handleExit();
     	updateViews();
@@ -164,7 +244,11 @@ public class Simulator {
         		+ "Total amount of people paying: " + String.valueOf(totalCarsPaying) + "<br>"
         		+ "Time passed: " + time + "<br> "
         		+ "Days passed: " + String.valueOf(day) + "<br> "
-        		+ "Weeks passed: " + String.valueOf(week) + "</html>");
+        		+ "Weeks passed: " + String.valueOf(week) + "<br>"
+        		+ randomFloor1 + "" + randomRow1 + "" + randomPlace1 + "<br>"
+        		+ randomFloor2 + "" + randomRow2 + "" + randomPlace2 + "<br>"
+        		+ randomFloor3 + "" + randomRow3 + "" + randomPlace3 + "<br>"
+        		+ "</html>");
     	} else {
     		//do nothing
     	}
@@ -197,6 +281,7 @@ public class Simulator {
     }
     
     public static void deleteCars(){
+    	generatePreserved();
     	entrancePassQueue.clearQueue();
     	entranceCarQueue.clearQueue();
     	entranceElectricQueue.clearQueue();

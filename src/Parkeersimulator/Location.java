@@ -5,6 +5,7 @@ public class Location {
     private int floor;
     private int row;
     private int place;
+    private boolean preserved;
 
     /**
      * Constructor for objects of class Location
@@ -65,6 +66,14 @@ public class Location {
      */
     public int getPlace() {
         return place;
+    }
+    
+    public boolean getPreserved() {
+        return preserved;
+    }
+    
+    public void setPreserved(){
+    	this.preserved = true;
     }
 
 }

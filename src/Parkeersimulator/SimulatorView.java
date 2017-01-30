@@ -6,6 +6,8 @@ import javax.swing.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import java.awt.*;
@@ -26,6 +28,7 @@ public class SimulatorView extends JFrame {
     static String  state;
     JButton reset, pauseButton;
     static DefaultPieDataset piedataset;
+    static Graphics preservedGraphics;
 
     public SimulatorView(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
         this.numberOfFloors = numberOfFloors;
@@ -63,6 +66,7 @@ public class SimulatorView extends JFrame {
         );  
         
         PiePlot plot = (PiePlot) piechart.getPlot();
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} = {1} ({2})"));
 
         plot.setSectionPaint("Normal cars", Color.red);
         plot.setSectionPaint("Passholders", Color.blue);
@@ -323,7 +327,9 @@ public class SimulatorView extends JFrame {
     				for (int row = 4; row < getNumberOfRows(); row++) {
                         for (int place = 0; place < getNumberOfPlaces(); place++) {
                             Location location = new Location(floor, row, place);
-                            if (getCarAt(location) == null) {
+                            if(location.getPreserved()){
+                            	continue;
+                            } else if (getCarAt(location) == null) {
                                 return location;
                             }
                         }
@@ -332,7 +338,17 @@ public class SimulatorView extends JFrame {
     				for (int row = 0; row < getNumberOfRows(); row++) {
                         for (int place = 0; place < getNumberOfPlaces(); place++) {
                             Location location = new Location(floor, row, place);
-                            if (getCarAt(location) == null) {
+                            if(location.getFloor() == Simulator.randomFloor1 && location.getRow() == Simulator.randomRow1 && location.getPlace() == Simulator.randomPlace1){
+                            	continue;
+                            } else if(location.getFloor() == Simulator.randomFloor2 && location.getRow() == Simulator.randomRow2 && location.getPlace() == Simulator.randomPlace2){
+                            	continue;
+                            } else if(location.getFloor() == Simulator.randomFloor3 && location.getRow() == Simulator.randomRow3 && location.getPlace() == Simulator.randomPlace3){
+                            	continue;
+                            } else if(location.getFloor() == Simulator.randomFloor4 && location.getRow() == Simulator.randomRow4 && location.getPlace() == Simulator.randomPlace4){
+                            	continue;
+                            } else if(location.getFloor() == Simulator.randomFloor5 && location.getRow() == Simulator.randomRow5 && location.getPlace() == Simulator.randomPlace5){
+                            	continue;
+                            } else if (getCarAt(location) == null) {
                                 return location;
                             }
                         }
@@ -341,7 +357,9 @@ public class SimulatorView extends JFrame {
     				for (int row = 0; row < 5; row++) {
                         for (int place = 0; place < getNumberOfPlaces(); place++) {
                             Location location = new Location(floor, row, place);
-                            if (getCarAt(location) == null) {
+                            if(location.getPreserved()){
+                            	continue;
+                            } else if (getCarAt(location) == null) {
                                 return location;
                             }
                         }
@@ -354,14 +372,18 @@ public class SimulatorView extends JFrame {
                 	if(row >= 1){
                 		for (int place = 0; place < getNumberOfPlaces(); place++) {
                             Location location = new Location(floor, row, place);
-                            if (getCarAt(location) == null) {
+                            if(location.getPreserved()){
+                            	continue;
+                            } else if (getCarAt(location) == null) {
                                 return location;
                             }
                         }
                 	} else {
                 		for (int place = 15; place < getNumberOfPlaces(); place++) {
                             Location location = new Location(floor, row, place);
-                            if (getCarAt(location) == null) {
+                            if(location.getPreserved()){
+                            	continue;
+                            } else if (getCarAt(location) == null) {
                                 return location;
                             }
                         }
@@ -373,7 +395,9 @@ public class SimulatorView extends JFrame {
                 for (int row = 5; row < getNumberOfRows(); row++) {
                     for (int place = 0; place < getNumberOfPlaces(); place++) {
                         Location location = new Location(floor, row, place);
-                        if (getCarAt(location) == null) {
+                        if(location.getPreserved()){
+                        	continue;
+                        } else if (getCarAt(location) == null) {
                             return location;
                         }
                     }
@@ -384,7 +408,9 @@ public class SimulatorView extends JFrame {
                 for (int row = 0; row < 1; row++) {
                     for (int place = 0; place < 15; place++) {
                         Location location = new Location(floor, row, place);
-                        if (getCarAt(location) == null) {
+                        if(location.getPreserved()){
+                        	continue;
+                        } else if (getCarAt(location) == null) {
                             return location;
                         }
                     }
@@ -436,7 +462,7 @@ public class SimulatorView extends JFrame {
     private class CarParkView extends JPanel {
         
         private Dimension size;
-        private Image carParkImage;    
+        public Image carParkImage;  
     
         /**
          * Constructor for objects of class CarPark
@@ -479,6 +505,7 @@ public class SimulatorView extends JFrame {
                 carParkImage = createImage(size.width, size.height);
             }
             Graphics graphics = carParkImage.getGraphics();
+            preservedGraphics = graphics;
             for(int floor = 0; floor < getNumberOfFloors(); floor++) {
                 for(int row = 0; row < getNumberOfRows(); row++) {
                     for(int place = 0; place < getNumberOfPlaces(); place++) {
@@ -489,6 +516,38 @@ public class SimulatorView extends JFrame {
                     }
                 }
             }
+            graphics.setColor(Color.black);
+            graphics.fillRect(
+                    Simulator.randomFloor1 * 260 + (1 + (int)Math.floor(Simulator.randomRow1 * 0.5)) * 75 + (Simulator.randomRow1 % 2) * 20,
+                    60 + Simulator.randomPlace1 * 10,
+                    20 - 1,
+                    10 - 1); // TODO use dynamic size or constants
+            
+            graphics.fillRect(
+                    Simulator.randomFloor2 * 260 + (1 + (int)Math.floor(Simulator.randomRow2 * 0.5)) * 75 + (Simulator.randomRow2 % 2) * 20,
+                    60 + Simulator.randomPlace2 * 10,
+                    20 - 1,
+                    10 - 1); // TODO use dynamic size or constants
+            
+            graphics.fillRect(
+                    Simulator.randomFloor3 * 260 + (1 + (int)Math.floor(Simulator.randomRow3 * 0.5)) * 75 + (Simulator.randomRow3 % 2) * 20,
+                    60 + Simulator.randomPlace3 * 10,
+                    20 - 1,
+                    10 - 1); // TODO use dynamic size or constants
+            
+            graphics.fillRect(
+                    Simulator.randomFloor4 * 260 + (1 + (int)Math.floor(Simulator.randomRow4 * 0.5)) * 75 + (Simulator.randomRow4 % 2) * 20,
+                    60 + Simulator.randomPlace4 * 10,
+                    20 - 1,
+                    10 - 1); // TODO use dynamic size or constants
+            
+            graphics.fillRect(
+                    Simulator.randomFloor5 * 260 + (1 + (int)Math.floor(Simulator.randomRow5 * 0.5)) * 75 + (Simulator.randomRow5 % 2) * 20,
+                    60 + Simulator.randomPlace5 * 10,
+                    20 - 1,
+                    10 - 1); // TODO use dynamic size or constants
+            
+            
             repaint();
         }
     
