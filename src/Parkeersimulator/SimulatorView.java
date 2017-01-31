@@ -6,7 +6,6 @@ import javax.swing.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
@@ -88,7 +87,8 @@ public class SimulatorView extends JFrame {
         JButton fastButton = new JButton("Faster");   
         
         fastButton.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) {
+        	  @Override
+			public void actionPerformed(ActionEvent e) {
         		  if(Simulator.tickPause < 7){
           			  
           		  } else {
@@ -102,7 +102,8 @@ public class SimulatorView extends JFrame {
         pauseButton = new JButton("Pause");
         
         pauseButton.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) {
+        	  @Override
+			public void actionPerformed(ActionEvent e) {
         		  if(pauseButton.getText() == "Pause"){
         			  Simulator.pauseState = !Simulator.pauseState;
         			  pauseButton.setText("Start");
@@ -118,7 +119,8 @@ public class SimulatorView extends JFrame {
         JButton slowButton = new JButton("Slower");
         
         slowButton.addActionListener(new ActionListener() { 
-      	  public void actionPerformed(ActionEvent e) {
+      	  @Override
+		public void actionPerformed(ActionEvent e) {
       		  if(Simulator.tickPause > 1600){
       			  
       		  } else {
@@ -131,7 +133,8 @@ public class SimulatorView extends JFrame {
         reset = new JButton("Reset");
         
         reset.addActionListener(new ActionListener() { 
-      	  public void actionPerformed(ActionEvent e) {
+      	  @Override
+		public void actionPerformed(ActionEvent e) {
       		Simulator.minute = 0;
       		Simulator.hour = 0;
       		Simulator.day = 0;
@@ -159,7 +162,8 @@ public class SimulatorView extends JFrame {
         
         JButton buttonInputNormal = new JButton("Set normal arrivals per hour");
         buttonInputNormal.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) {
+        	  @Override
+			public void actionPerformed(ActionEvent e) {
         		  Simulator.weekDayArrivals = Integer.parseInt(inputNormal.getText());
         		}
         	  
@@ -170,7 +174,8 @@ public class SimulatorView extends JFrame {
         
         JButton buttonInputPass = new JButton("Set pass arrivals per hour");
         buttonInputPass.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) {
+        	  @Override
+			public void actionPerformed(ActionEvent e) {
         		  Simulator.weekDayPassArrivals = Integer.parseInt(inputPass.getText());
         		}
         	  
@@ -181,7 +186,8 @@ public class SimulatorView extends JFrame {
         
         JButton buttonInputElectric = new JButton("Set electric arrivals per hour");
         buttonInputElectric.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) {
+        	  @Override
+			public void actionPerformed(ActionEvent e) {
         		  Simulator.weekDayElectricArrivals = Integer.parseInt(inputElectric.getText());
         		}
         	  
@@ -338,7 +344,7 @@ public class SimulatorView extends JFrame {
     				for (int row = 0; row < getNumberOfRows(); row++) {
                         for (int place = 0; place < getNumberOfPlaces(); place++) {
                             Location location = new Location(floor, row, place);
-                            if(location.getFloor() == Simulator.randomFloor1 && location.getRow() == Simulator.randomRow1 && location.getPlace() == Simulator.randomPlace1){
+                            if(location.getFloor() == Simulator.randomFloor1 && location.getRow() == Simulator.randomRow2 && location.getPlace() == Simulator.randomPlace1){
                             	continue;
                             } else if(location.getFloor() == Simulator.randomFloor2 && location.getRow() == Simulator.randomRow2 && location.getPlace() == Simulator.randomPlace2){
                             	continue;
@@ -474,7 +480,8 @@ public class SimulatorView extends JFrame {
         /**
          * Overridden. Tell the GUI manager how big we would like to be.
          */
-        public Dimension getPreferredSize() {
+        @Override
+		public Dimension getPreferredSize() {
             return new Dimension(850, 400);
         }
     
@@ -482,7 +489,8 @@ public class SimulatorView extends JFrame {
          * Overriden. The car park view component needs to be redisplayed. Copy the
          * internal image to screen.
          */
-        public void paintComponent(Graphics g) {
+        @Override
+		public void paintComponent(Graphics g) {
             if (carParkImage == null) {
                 return;
             }

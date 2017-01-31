@@ -14,7 +14,8 @@ public class AdHocCar extends Car {
         this.setType("N");
     }
     
-    public Color getColor(){
+    @Override
+	public Color getColor(){
     	return COLOR;
     }
 }

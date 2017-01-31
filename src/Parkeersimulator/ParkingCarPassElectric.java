@@ -14,6 +14,7 @@ public class ParkingCarPassElectric extends Car {
         this.setType("PE");
 	}
 	
+	@Override
 	public Color getColor(){
 		return COLOR;
 	}

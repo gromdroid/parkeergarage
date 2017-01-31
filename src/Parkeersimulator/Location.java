@@ -19,7 +19,8 @@ public class Location {
     /**
      * Implement content equality.
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if(obj instanceof Location) {
             Location other = (Location) obj;
             return floor == other.getFloor() && row == other.getRow() && place == other.getPlace();
@@ -33,7 +34,8 @@ public class Location {
      * Return a string of the form floor,row,place.
      * @return A string representation of the location.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return floor + "," + row + "," + place;
     }
 
@@ -43,7 +45,8 @@ public class Location {
      * a unique hash code for each (floor, row, place) tupel.
      * @return A hashcode for the location.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return (floor << 20) + (row << 10) + place;
     }
 

@@ -14,7 +14,8 @@ public class ParkingPassCar extends Car {
         this.setType("P");
     }
     
-    public Color getColor(){
+    @Override
+	public Color getColor(){
     	return COLOR;
     }
 }

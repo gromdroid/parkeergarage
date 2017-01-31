@@ -1,19 +1,7 @@
 package Parkeersimulator;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
 
 public class Simulator {
 
@@ -28,6 +16,9 @@ public class Simulator {
 	randomFloor4, randomRow4, randomPlace4,
 	randomFloor5, randomRow5, randomPlace5;
 
+	static ArrayList<Integer> randomList;
+	
+	
 	private static CarQueue entranceCarQueue;
     private static CarQueue entrancePassQueue;
     private static CarQueue entranceElectricQueue;
@@ -42,7 +33,6 @@ public class Simulator {
     static int hour = 0;
     static int minute = 0;
     static String time;
-    static int[][] randomList;
     
     String timeHour, timeMinute;
     
@@ -59,11 +49,11 @@ public class Simulator {
     static int weekDayArrivals= 175; // average number of arriving cars per hour
     int weekendArrivals = 275; // average number of arriving cars per hour
     static int weekDayPassArrivals= 30; // average number of arriving cars per hour
-    int weekendPassArrivals = 5; // average number of arriving cars per hour
+    int weekendPassArrivals = 25; // average number of arriving cars per hour
     static int weekDayElectricArrivals= 20; //average number of electric cars per hour
-    int weekendElectricArrivals= 5; //average number of electric cars per hour
+    int weekendElectricArrivals= 20; //average number of electric cars per hour
     int weekDayPassElectricArrivals= 20; //average number of electric cars per hour
-    int weekendPassElectricArrivals= 5; //average number of electric cars per hour
+    int weekendPassElectricArrivals= 20; //average number of electric cars per hour
     
     int enterSpeed = 3; // number of cars that can enter per minute
     int paymentSpeed = 7; // number of cars that can pay per minute
@@ -88,18 +78,19 @@ public class Simulator {
     }
 
     public static void generatePreserved() {
+    	randomList = new ArrayList<Integer>();
     	Random rand = new Random();
 
     	int random1 = rand.nextInt(2-0) + 0;
     	if(random1 == 0){
     		randomRow1 = rand.nextInt(5-4) + 4;
-        	randomPlace1 = rand.nextInt(29-0) + 0;
+    		randomPlace1 = rand.nextInt(29-0) + 0;
     	} else if(random1 == 1){
-    		randomRow1 = rand.nextInt(5-0) + 0;
-        	randomPlace1 = rand.nextInt(29-0) + 0;
+    		randomRow2 = rand.nextInt(5-0) + 0;
+        	randomPlace2 = rand.nextInt(29-0) + 0;
     	} else if(random1 == 2){
-    		randomRow1 = rand.nextInt(4-0) + 0;
-        	randomPlace1 = rand.nextInt(29-0) + 0;
+    		randomRow2 = rand.nextInt(4-0) + 0;
+        	randomPlace2 = rand.nextInt(29-0) + 0;
     	}
     	randomFloor1 = random1;
     	
@@ -177,6 +168,7 @@ public class Simulator {
         while (minute > 59) {
             minute -= 60;
             hour++;
+            generatePreserved();
         }
         while (hour > 23) {
             hour -= 24;
@@ -244,11 +236,7 @@ public class Simulator {
         		+ "Total amount of people paying: " + String.valueOf(totalCarsPaying) + "<br>"
         		+ "Time passed: " + time + "<br> "
         		+ "Days passed: " + String.valueOf(day) + "<br> "
-        		+ "Weeks passed: " + String.valueOf(week) + "<br>"
-        		+ randomFloor1 + "" + randomRow1 + "" + randomPlace1 + "<br>"
-        		+ randomFloor2 + "" + randomRow2 + "" + randomPlace2 + "<br>"
-        		+ randomFloor3 + "" + randomRow3 + "" + randomPlace3 + "<br>"
-        		+ "</html>");
+        		+ "Weeks passed: " + String.valueOf(week) + "</html>");
     	} else {
     		//do nothing
     	}
@@ -291,7 +279,7 @@ public class Simulator {
     	totalCarsParkingE = 0;
     	totalCarsParkingN = 0;
     	totalCarsParkingP = 0;
-    	simulatorView.updateView();
+    	totalCarsParkingPE = 0;
     	
     	SimulatorView.piedataset.setValue("Normal cars", 0);  
         SimulatorView.piedataset.setValue("Passholders", 0);  
@@ -310,6 +298,7 @@ public class Simulator {
         		+ "Days passed: 0<br> "
         		+ "Weeks passed: 0</html>");
     	
+    	simulatorView.updateView();
     	
     }
     
